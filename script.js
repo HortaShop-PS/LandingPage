@@ -1,92 +1,189 @@
-
-document.addEventListener('DOMContentLoaded', function() {
-    const animation = lottie.loadAnimation({
-        container: document.getElementById('lottie-container'),
-        renderer: 'svg',
+document.addEventListener("DOMContentLoaded", () => {
+  
+    const lottieContainer = document.getElementById("lottie-container")
+  
+    if (lottieContainer) {
+      const animation = lottie.loadAnimation({
+        container: lottieContainer,
+        renderer: "svg",
         loop: true,
         autoplay: true,
-        path: 'final.json',
+        path: "https://blobs.vusercontent.net/blob/final-cWin6iU31BGHxxCydERXRXQAibg9Uj.json",
         rendererSettings: {
-            preserveAspectRatio: 'xMidYMid meet',
-            clearCanvas: false,
-            progressiveLoad: true,
-            hideOnTransparent: true
-        }
-    });
-
-    
-    animation.addEventListener('DOMLoaded', function() {
-        console.log('Animation loaded successfully');
-        
-        document.getElementById('lottie-container').style.opacity = '1';
-    });
-
-    animation.addEventListener('error', function(error) {
-        console.error('Animation error:', error);
-    });
-});
-
-
-function adjustLayers() {
-    const container = document.querySelector('.container');
-    const containerWidth = container.offsetWidth;
-    const containerHeight = container.offsetHeight;
-    
-    
-    const lottieContainer = document.getElementById('lottie-container');
-    const sizeMultiplier = window.innerWidth <= 480 ? 0.9 : 0.5;
-const size = Math.min(containerWidth, containerHeight) * sizeMultiplier;
-    lottieContainer.style.width = `${size}px`;
-    lottieContainer.style.height = `${size}px`;
-    
-   
-    lottieContainer.style.left = `${(containerWidth - size) / 2}px`;
-    lottieContainer.style.top = `${(containerHeight - size) / 2}px`;
-}
-
-
-window.addEventListener('load', function() {
-    adjustLayers();
-    adjustBlurForScreenSize();
-});
-window.addEventListener('resize', function() {
-    adjustLayers();
-    adjustBlurForScreenSize();
-});
-
-
-document.addEventListener('mousemove', function(e) {
-    const xPos = (e.clientX / window.innerWidth - 0.5) * 5; 
-    const yPos = (e.clientY / window.innerHeight - 0.5) * 5;
-    
-
-    const layer1 = document.querySelector('#layer1 img');
-    const layer2 = document.querySelector('#layer2 img');
-    const layer3 = document.querySelector('#layer3 img');
-    
-    if (layer1) layer1.style.transform = `translate(${xPos * 1.0}px, ${yPos * 1.0}px)`; 
-    if (layer2) layer2.style.transform = `translate(${xPos * 2.0}px, ${yPos * 2.0}px)`; 
-    if (layer3) layer3.style.transform = `translate(${xPos * 3.0}px, ${yPos * 3.0}px)`;
-});
-
-
-function adjustBlurForScreenSize() {
-    const width = window.innerWidth;
-    const layer1 = document.getElementById('layer1');
-    const layer2 = document.getElementById('layer2');
-    const layer3 = document.getElementById('layer3');
-    
-    if (width <= 480) { 
-        layer1.style.filter = 'blur(0px)'; 
-        layer2.style.filter = 'blur(3px)'; 
-        layer3.style.filter = 'blur(6px)'; 
-    } else if (width <= 768) { 
-        layer1.style.filter = 'blur(0px)';
-        layer2.style.filter = 'blur(3px)';
-        layer3.style.filter = 'blur(6px)'; 
-    } else { 
-        layer1.style.filter = 'blur(0px)';
-        layer2.style.filter = 'blur(3px)'; 
-        layer3.style.filter = 'blur(6px)';
+          preserveAspectRatio: "xMidYMid meet",
+          clearCanvas: false,
+          progressiveLoad: true,
+          hideOnTransparent: true,
+        },
+      })
+  
+      animation.addEventListener("DOMLoaded", () => {
+        console.log("Animação carregada com sucesso")
+        lottieContainer.style.opacity = "1"
+      })
+  
+      animation.addEventListener("error", (error) => {
+        console.error("Erro na animação:", error)
+       
+        lottieContainer.innerHTML =
+          '<img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-BluCcf6PMSyAYzxqkuuicPJYPkEw5b.png" alt="HortaShop Character" style="width: 100%; height: 100%; object-fit: contain;">'
+      })
     }
-}
+  
+    
+    const mobileMenuBtn = document.querySelector(".mobile-menu-btn")
+    const nav = document.querySelector(".nav")
+  
+    if (mobileMenuBtn && nav) {
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileMenuBtn.classList.toggle("active")
+        nav.classList.toggle("active")
+      })
+    }
+  
+    
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault()
+  
+        const targetId = this.getAttribute("href")
+        if (targetId === "#") return
+  
+        const targetElement = document.querySelector(targetId)
+        if (targetElement) {
+          const headerHeight = document.querySelector(".header").offsetHeight
+          const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight
+  
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth",
+          })
+  
+          
+          if (mobileMenuBtn && mobileMenuBtn.classList.contains("active")) {
+            mobileMenuBtn.classList.remove("active")
+            nav.classList.remove("active")
+          }
+        }
+      })
+    })
+  
+   
+    function updateVegetableLayers() {
+      const scrollPosition = window.pageYOffset
+  
+      document.querySelectorAll(".vegetable-layer").forEach((layer, index) => {
+        const speed = (index + 1) * 0.1
+        const yPos = scrollPosition * speed
+        layer.style.transform = `translateY(${yPos}px)`
+      })
+    }
+  
+    window.addEventListener("scroll", () => {
+      requestAnimationFrame(updateVegetableLayers)
+    })
+  
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1,
+    }
+  
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active")
+          observer.unobserve(entry.target)
+        }
+      })
+    }, observerOptions)
+  
+    document.querySelectorAll(".about-item, .feature-item, .step, .app-screenshot").forEach((el) => {
+      el.classList.add("fade-in")
+      observer.observe(el)
+    })
+  
+    
+    const header = document.querySelector(".header")
+    let lastScrollTop = 0
+  
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+  
+      if (scrollTop > 50) {
+        header.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.08)"
+      } else {
+        header.style.boxShadow = "none"
+      }
+  
+      lastScrollTop = scrollTop
+    })
+  
+    
+    const downloadBtn = document.querySelector(".download-btn")
+    if (downloadBtn) {
+      downloadBtn.addEventListener("click", () => {
+        console.log("Download do aplicativo iniciado")
+        
+      })
+    }
+  
+    
+    function animateCounter(element, target, duration = 2000) {
+      let start = 0
+      const increment = target / (duration / 16)
+  
+      function updateCounter() {
+        start += increment
+        if (start < target) {
+          element.textContent = Math.floor(start)
+          requestAnimationFrame(updateCounter)
+        } else {
+          element.textContent = target
+        }
+      }
+  
+      updateCounter()
+    }
+  
+    
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const statNumbers = entry.target.querySelectorAll(".stat-number")
+          statNumbers.forEach((stat) => {
+            const target = Number.parseInt(stat.textContent)
+            if (!isNaN(target)) {
+              stat.textContent = "0"
+              animateCounter(stat, target)
+            }
+          })
+          statsObserver.unobserve(entry.target)
+        }
+      })
+    })
+  
+    const statsSection = document.querySelector(".stats")
+    if (statsSection) {
+      statsObserver.observe(statsSection)
+    }
+  
+    
+    document.addEventListener("keydown", (e) => {
+      
+      if (e.key === "Escape" && mobileMenuBtn && mobileMenuBtn.classList.contains("active")) {
+        mobileMenuBtn.classList.remove("active")
+        nav.classList.remove("active")
+      }
+    })
+  
+    console.log("HortaShop Landing Page carregada com sucesso!")
+  })
+  
+  
+  var lottie
+  
+  
+  var gtag
+  
