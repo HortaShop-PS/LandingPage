@@ -14,6 +14,9 @@
     --transition: all 0.3s ease;
     --border-radius: 8px;
   }
+  svg{
+    scale: 1.8;
+  }
   
   * {
     margin: 0;
